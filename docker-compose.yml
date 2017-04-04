@@ -29,6 +29,18 @@ services:
         - mysql
         - memcache
 
+  batch:
+      build: php/docker
+      volumes_from:
+        - storage
+      volumes:
+        - ./php/config/php.ini:/usr/local/etc/php/php.ini
+      working_dir: /srv/www
+      depends_on:
+        - mysql
+        - memcache
+      entrypoint: ["php", "/srv/batch/batch.php"]
+
   mysql:
       image: mysql:latest
       volumes:

@@ -19,7 +19,3 @@ RUN apt-get install -y libmemcached-dev unzip && \
     echo "memcached.use_sasl = 1" >> /usr/local/etc/php/conf.d/memcached.ini
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-COPY composer.json /root/.composer/
-RUN composer global validate --no-ansi --no-check-all --no-check-publish --no-interaction
-RUN composer global install --no-ansi --no-interaction --no-progress --optimize-autoloader --prefer-dist
-ENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/.composer/vendor/bin

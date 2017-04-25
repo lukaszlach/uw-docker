@@ -29,17 +29,32 @@ services:
         - mysql
         - memcache
 
-  batch:
-      build: php/docker
+  batch-url-crawler:
+      build: supervisor-php/docker
       volumes_from:
         - storage
       volumes:
         - ./php/config/php.ini:/usr/local/etc/php/php.ini
+        - ./supervisor-php/conf/supervisord.conf:/etc/supervisord.conf
+        - ./supervisor-php/conf/10-url-crawler.conf:/etc/supervisor/conf.d/url-crawler.conf
+        - ./application/url-crawler:/srv/application
       working_dir: /srv/www
       depends_on:
-        - mysql
-        - memcache
-      entrypoint: ["php", "/srv/batch/batch.php"]
+        - redis
+
+  batch-body-crawler:
+      build: supervisor-php/docker
+      volumes_from:
+        - storage
+      volumes:
+        - ./php/config/php.ini:/usr/local/etc/php/php.ini
+        - ./supervisor-php/conf/supervisord.conf:/etc/supervisord.conf
+        - ./supervisor-php/conf/10-body-crawler.conf:/etc/supervisor/conf.d/body-crawler.conf
+        - ./application/body-crawler:/srv/application
+      working_dir: /srv/www
+      depends_on:
+        - redis
+        - batch-url-crawler
 
   mysql:
       image: mysql:latest
